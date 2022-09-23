@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team3128.autonomous.AutoPrograms;
-import frc.team3128.subsystems.NAR_Drivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -53,7 +52,6 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         m_robotContainer.init();
         CommandScheduler.getInstance().cancelAll();
-        NAR_Drivetrain.getInstance().stop();
     }
 
     @Override
