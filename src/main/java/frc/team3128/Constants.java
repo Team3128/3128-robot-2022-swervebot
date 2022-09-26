@@ -34,13 +34,37 @@ public class Constants {
     }
 
     public static class ShooterConstants {
+        public static final double kF = 0;
+        
+        public static final double LOW_kP = 0;
+        public static final double LOW_kI = 0;
+        public static final double LOW_kD = 0;
+        public static final double LOW_kS = 0;
+        public static final double LOW_kV = 0;
+        public static final double LOW_kA = 0;
+
+        public static final double HIGH_kP = 0;
+        public static final double HIGH_kI = 0;
+        public static final double HIGH_kD = 0;
+        public static final double HIGH_kS = 0;
+        public static final double HIGH_kV = 0;
+        public static final double HIGH_kA = 0;
+
+        public static final int LEFT_SHOOTER_ID = 0;
+        public static final int RIGHT_SHOOTER_ID = 0;
+
+        public static final double RPM_THRESHOLD_PRECENT = 0.05;
+        public static final double PLATEAU_THRESHOLD = 1;
+        public static final double RPM_THRESHOLD_PRECENT_MAX = 0.15;
+        public static final double TIME_TO_MAX_THRESHOLD = 8;
+        public static final double PLATEUA_COUNT = 6;
 
     }
-
+        
     public static class HoodConstants {
 
     }
-
+    
     public static class VisionConstants {
 
         public static final String SHOOTER_HOSTNAME = "limelight-cog";
