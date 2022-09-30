@@ -75,6 +75,7 @@ public class Shooter extends PIDSubsystem {
         thresholdPrecent = ShooterConstants.RPM_THRESHOLD_PRECENT;
         super.setSetpoint(RPM);
         getController().setTolerance(thresholdPrecent * RPM);
+        resetPlateauCount();
     }
 
     public void stopShoot() {
