@@ -26,6 +26,10 @@ public class Constants {
     }
 
     public static class HopperConstants {
+        public static final int Hopper_Motor_1_ID = 1;
+        public static final int Hopper_Motor_2_ID = 2;
+        public static final int Hopper_Motor_3_ID = 3;
+        public static final double COLOR_SENSOR_TOLERANCE = 1.5;
 
     }
 
