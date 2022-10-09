@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team3128.common.hardware.input.NAR_Joystick;
-import frc.team3128.common.hardware.limelight.LEDMode;
-import frc.team3128.common.hardware.limelight.Limelight;
+import frc.team3128.common.hardware.limelight.NAR_Camera;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -22,6 +22,8 @@ import frc.team3128.common.utility.Log;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+    private Vision vision;
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -33,6 +35,7 @@ public class RobotContainer {
     private Trigger isShooting;
 
     public RobotContainer() {
+        vision = Vision.getInstance();
         // ConstantsInt.initTempConstants();
 
         //TODO: Enable all PIDSubsystems so that useOutput runs here
@@ -66,9 +69,9 @@ public class RobotContainer {
         
         Log.info("NarwhalRobot", "Setting up limelight chooser...");
       
-        for (Limelight ll : new Limelight[] {}) {
+        for (NAR_Camera ll : vision.getCameras()) {
             NarwhalDashboard.addLimelight(ll);
-            ll.setLEDMode(LEDMode.OFF);
+            ll.setLED(false);
         }
     }
 

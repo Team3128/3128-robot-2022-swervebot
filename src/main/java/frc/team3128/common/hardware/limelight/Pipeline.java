@@ -2,7 +2,8 @@ package frc.team3128.common.hardware.limelight;
 
 public enum Pipeline {
     RED(0),
-    BLUE(1);
+    BLUE(1),
+    GREEN(2);
 
     private int pipeline;
     private Pipeline(int pipeline) {
