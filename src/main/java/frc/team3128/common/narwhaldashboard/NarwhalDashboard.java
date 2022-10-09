@@ -36,7 +36,7 @@ public class NarwhalDashboard extends WebSocketServer {
     private static HashMap<String, DashButtonCallback> buttons = new HashMap<String, DashButtonCallback>();
     private static HashMap<String, NumericalDataCallback> numDataCallbacks = new HashMap<String, NumericalDataCallback>();
 
-    private static HashMap<String, NAR_Camera> limelights = new HashMap<String, NAR_Camera>();
+    private static HashMap<String, Limelight> limelights = new HashMap<String, Limelight>();
 
     private static String selectedAuto = null;
     private static String selectedLimelight = null;
@@ -96,16 +96,16 @@ public class NarwhalDashboard extends WebSocketServer {
         autoPrograms.addAll(Arrays.asList(names));
     }
 
-    public static void addLimelight(NAR_Camera light) {
-        limelights.put(light.get_name(), light);
+    public static void addLimelight(Limelight light) {
+        limelights.put(light.hostname, light);
     }
 
     public static String getSelectedAutoName() {
         return selectedAuto;
     }
 
-    public static void setSelectedLimelight(NAR_Camera ll){
-        selectedLimelight = ll.get_name();
+    public static void setSelectedLimelight(Limelight ll){
+        selectedLimelight = ll.hostname;
     }
 
     /**
@@ -152,7 +152,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 obj.put("selected_auto", selectedAuto);
                 obj.put("selected_limelight", selectedLimelight);
                 if(selectedLimelight != null) {
-                    obj.put("selected_pipeline", limelights.get(selectedLimelight).getPipelineIndex());
+                    obj.put("selected_pipeline", limelights.get(selectedLimelight).getSelectedPipeline());
                 }
 
                 JSONObject constantsObj = new JSONObject();
@@ -186,8 +186,8 @@ public class NarwhalDashboard extends WebSocketServer {
                     obj.put("auto", autoProgramArr);
 
                     JSONArray limelightsArr = new JSONArray();
-                    for(NAR_Camera lime : limelights.values()) {
-                        limelightsArr.add(lime.get_name());
+                    for(Limelight lime : limelights.values()) {
+                        limelightsArr.add(lime.hostname);
                     }
                     obj.put("limelight", limelightsArr);
 
