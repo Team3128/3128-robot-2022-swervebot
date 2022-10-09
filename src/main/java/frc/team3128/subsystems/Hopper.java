@@ -9,6 +9,8 @@ import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
 
 import static frc.team3128.Constants.HopperConstants.*;
 
+import java.io.FileDescriptor;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 /**
@@ -22,7 +24,7 @@ public class Hopper extends SubsystemBase {
     private PicoColorSensor m_colorSensor;
     private DigitalInput m_topDistanceSensor, m_bottomDistanceSensor;
 
-    private NAR_TalonSRX m_hopper1, m_hopper2, m_hopper3;
+    private NAR_TalonSRX m_hopper1, m_hopper2, m_hopperOuttake, m_hopperSerializer;
 
 
 
@@ -38,13 +40,15 @@ public class Hopper extends SubsystemBase {
     }
 
     private void configMotors() {
-        m_hopper1 = new NAR_TalonSRX(Hopper_Motor_1_ID);
-        m_hopper1 = new NAR_TalonSRX(Hopper_Motor_2_ID);
-        m_hopper3 = new NAR_TalonSRX(Hopper_Motor_3_ID);
+        m_hopper1 = new NAR_TalonSRX(HOPPER_MOTOR_1_ID);
+        m_hopper1 = new NAR_TalonSRX(HOPPER_MOTOR_2_ID);
+        m_hopperOuttake = new NAR_TalonSRX(HOPPER_MOTOR_OUTTAKE_ID);
+        m_hopperSerializer = new NAR_TalonSRX(HOPPER_MOTOR_SERIALIZER_ID);
 
         m_hopper1.setNeutralMode(NeutralMode.Coast);
         m_hopper2.setNeutralMode(NeutralMode.Coast);
-        m_hopper3.setNeutralMode(NeutralMode.Coast);
+        m_hopperOuttake.setNeutralMode(NeutralMode.Coast);
+        m_hopperSerializer.setNeutralMode(NeutralMode.Coast);
     }
     private void configSensors() {
         m_colorSensor = new PicoColorSensor();
@@ -55,6 +59,44 @@ public class Hopper extends SubsystemBase {
     /**
      * Hopper Methods
      */
+    
+     //Run Hopper
+    public void runHopper() {
+        m_hopper1.set(HOPPER_MOTOR_1_ID);
+        m_hopperSerializer.set(HOPPER_MOTOR_2_ID);
+        m_hopperOuttake.set(HOPPER_MOTOR_OUTTAKE_ID);
+    }
+
+    public void runHopper(double power) {
+        m_hopper1.set(power);
+        m_hopper2.set(power);
+        m_hopperSerializer.set(power+.1);
+        m_hopperOuttake.set(power);
+    }
+
+    //Reverse Hopper
+    public void reverseHopper() {
+        m_hopper1.set(HOPPER_MOTOR_POWER);
+    }
+
+    public void reverseHopper(double power) {
+        m_hopper1.set(power);
+    }
+
+    //Outtake Hopper
+    public void outtakeHopper() {
+        m_hopper1.set(HOPPER_MOTOR_POWER);
+    }
+
+    public void outtakeHopper(double power) {
+        m_hopper1.set(power);
+    }
+
+    public void stopHopper() {
+        m_hopper1.set(0);
+        m_hopper1.set(0);
+        m_hopperOuttake.set(0);
+    }
 
      /**
      * Color Sensor Methods
