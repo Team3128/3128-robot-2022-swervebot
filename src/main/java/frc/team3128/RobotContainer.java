@@ -8,10 +8,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.team3128.commands.CmdSwerveDrive;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.NAR_Camera;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+
+import frc.team3128.subsystems.Swerve;
 import frc.team3128.subsystems.Vision;
 
 /**
@@ -23,12 +26,13 @@ import frc.team3128.subsystems.Vision;
  */
 public class RobotContainer {
 
+    private Swerve swerve;
     private Vision vision;
 
-    private NAR_Joystick m_leftStick;
-    private NAR_Joystick m_rightStick;
+    private NAR_Joystick leftStick;
+    private NAR_Joystick rightStick;
 
-    private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
+    private CommandScheduler commandScheduler = CommandScheduler.getInstance();
   
     private boolean DEBUG = true; 
 
@@ -37,13 +41,16 @@ public class RobotContainer {
     public RobotContainer() {
         vision = Vision.getInstance();
         // ConstantsInt.initTempConstants();
+        swerve = Swerve.getInstance();
 
         //TODO: Enable all PIDSubsystems so that useOutput runs here
 
-        m_leftStick = new NAR_Joystick(0);
-        m_rightStick = new NAR_Joystick(1);
+        leftStick = new NAR_Joystick(0);
+        rightStick = new NAR_Joystick(1);
 
         // TODO: default driving command here
+        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, true));
+
 
         initDashboard();
         configureButtonBindings();
@@ -63,6 +70,7 @@ public class RobotContainer {
     private void initDashboard() {
         if (DEBUG) {
             SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
+            SmartDashboard.putData("Swerve", swerve);
         }
 
         NarwhalDashboard.startServer();   
@@ -78,5 +86,7 @@ public class RobotContainer {
     public void updateDashboard() {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
+        NarwhalDashboard.put("x", swerve.getPose().getX());
+        NarwhalDashboard.put("y", swerve.getPose().getY());
     }
 }
