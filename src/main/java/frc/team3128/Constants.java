@@ -3,9 +3,14 @@ package frc.team3128;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.FALCON_ENCODER_RESOLUTION;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.SPARKMAX_ENCODER_RESOLUTION;
 
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.team3128.common.swerve.SwerveModuleConstants;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 
 public class Constants {
 
@@ -153,10 +158,19 @@ public class Constants {
 
     public static class VisionConstants {
 
-        public static final String SHOOTER_HOSTNAME = "limelight-cog";
+        public static final double SCREEN_WIDTH = 320;
+        public static final double SCREEN_HEIGHT = 240;
+    
+        public static final double HORIZONTAL_FOV = 59.6; //degrees
+        public static final double VERTICAL_FOV = 45.7; //degrees
 
-        public static final double HUB_HEIGHT = 104;
-
-        public static final double BALL_TARGET_HEIGHT = 9.5 / 2;
+        public static final Translation2d CAMERA_OFFSET = new Translation2d(Units.inchesToMeters(-20),0); //For Shooter Only
+    }
+    
+    public static class FieldConstants{
+        public static final Pose2d HUB_POSITION = new Pose2d(Units.inchesToMeters(324), Units.inchesToMeters(162),new Rotation2d(0));
+        public static final double FIELD_X_LENGTH = Units.inchesToMeters(648); // meters
+        public static final double FIELD_Y_LENGTH = Units.inchesToMeters(324); // meters
+        public static final double HUB_RADIUS = Units.inchesToMeters(26.69); // meters
     }
 }
