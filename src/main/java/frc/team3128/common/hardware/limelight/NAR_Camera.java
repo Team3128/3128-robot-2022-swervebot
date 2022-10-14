@@ -17,8 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import static frc.team3128.Constants.VisionConstants.CAMERA_OFFSET;
+import static frc.team3128.Constants.VisionConstants.*;
 
 import static frc.team3128.Constants.FieldConstants.*;
 
@@ -29,20 +28,14 @@ public class NAR_Camera extends PhotonCamera {
     private PhotonTrackedTarget target;
 
     public NAR_Camera(Camera camera) {
-        super(NetworkTableInstance.getDefault(), camera.hostname);
+        super(camera.hostname);
         this.camera = camera;
         setLED(false);
-        // (new Thread(() -> {
-        //     while(true) {
-        //         PhotonPipelineResult result = this.getLatestResult();
-        //         target = result.getBestTarget();   
-        //     }
-        //  } )).start();
     }
 
     public void update() { 
         PhotonPipelineResult result = this.getLatestResult();
-        target = result.getBestTarget();   
+        target = result.hasTargets() ? result.getBestTarget() : null;   
     }
 
     public double target_yaw() {
@@ -79,7 +72,7 @@ public class NAR_Camera extends PhotonCamera {
         if (target == null) {
             return false;
         }
-        return target.getArea() >= 0.05;
+        return target.getArea() >= AREA_THRESHOLD;
     }
 
     public double get_distance() {
@@ -87,7 +80,7 @@ public class NAR_Camera extends PhotonCamera {
             return -1;
         double ty = target_pitch() * Math.PI / 180;
         double tx = target_yaw() * Math.PI / 180;
-        return (camera.targetHeight - camera.cameraHeight) / (Math.tan(ty + camera.cameraAngle) * Math.cos(tx));
+        return (camera.targetHeight - camera.cameraHeight) / (Math.tan(ty + camera.cameraAngle) * Math.cos(tx)) - camera.cameraOffset;
     }
 
     public void setLED(boolean state){
@@ -144,9 +137,6 @@ public class NAR_Camera extends PhotonCamera {
         Transform2d transform = new Transform2d(translation,new Rotation2d(Units.degreesToRadians(gyroAngle)));
         Pose2d pos = HUB_POSITION.transformBy(transform.inverse());
 
-        Transform2d offset = new Transform2d(CAMERA_OFFSET, new Rotation2d());
-        pos.transformBy(offset);
-
         //Pose2d pos = PhotonUtils.estimateFieldToRobot(getRelativeCamPos(gyroAngle), HUB_POSITION, offset);
         return pos;
     }
@@ -159,8 +149,6 @@ public class NAR_Camera extends PhotonCamera {
                                     .plus(HUB_POSITION.getTranslation());
         Pose2d pos = new Pose2d(fieldPos, Rotation2d.fromDegrees(gyroAngle));
 
-        Transform2d offset = new Transform2d(CAMERA_OFFSET, new Rotation2d());
-        pos.transformBy(offset);
         return pos;
     }
 

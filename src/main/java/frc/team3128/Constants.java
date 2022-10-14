@@ -51,6 +51,14 @@ public class Constants {
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
+        public static final double TURN_TOLERANCE = 3;
+
+        /* Turning PID Values */
+        public static final double turnKP = 0.1;
+        public static final double turnKI = 0;
+        public static final double turnKD = 0;
+        public static final double turnKF = 0.1;
+
         /* Angle Motor PID Values */
         // switched 364 pid values to SDS pid values
         public static final double angleKP = 0.2; // 0.6;
@@ -162,7 +170,9 @@ public class Constants {
         public static final double HORIZONTAL_FOV = 59.6; //degrees
         public static final double VERTICAL_FOV = 45.7; //degrees
 
-        public static final Translation2d CAMERA_OFFSET = new Translation2d(Units.inchesToMeters(-20),0); //For Shooter Only
+        public static final double TX_THRESHOLD = 3;
+
+        public static final double AREA_THRESHOLD = 0;
     }
     
     public static class FieldConstants{
