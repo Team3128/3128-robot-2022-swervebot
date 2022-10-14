@@ -17,7 +17,6 @@ import static frc.team3128.Constants.SwerveConstants.*;
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry odometry;
     public SwerveModule[] modules;
-    private double[] xyz_dps = new double[3];
     public static WPI_Pigeon2 gyro;
     private static Swerve instance;
 
@@ -25,7 +24,7 @@ public class Swerve extends SubsystemBase {
         gyro = new WPI_Pigeon2(0);
         zeroGyro();
 
-        odometry = new SwerveDriveOdometry(swerveKinematics, getGyroRotation());
+        odometry = new SwerveDriveOdometry(swerveKinematics, getGyroRotation2d());
 
         modules = new SwerveModule[] {
             new SwerveModule(0, Mod0.constants),
@@ -38,7 +37,7 @@ public class Swerve extends SubsystemBase {
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
         SwerveModuleState[] moduleStates = swerveKinematics.toSwerveModuleStates(
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getGyroRotation())
+                translation.getX(), translation.getY(), rotation, getGyroRotation2d())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxSpeed);
 
@@ -58,7 +57,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) { // TODO: Call this!!!!
-        odometry.resetPosition(pose, getGyroRotation());
+        odometry.resetPosition(pose, getGyroRotation2d());
     }
 
     public SwerveModuleState[] getStates() {
@@ -71,7 +70,7 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(getGyroRotation(), getStates());
+        odometry.update(getGyroRotation2d(), getStates());
         for(SwerveModule module : modules){
             SmartDashboard.putNumber("Mod " + module.moduleNumber + " Cancoder", module.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + module.moduleNumber + " Integrated", module.getState().angle.getDegrees());
@@ -81,27 +80,22 @@ public class Swerve extends SubsystemBase {
         Translation2d position = pose.getTranslation();
         SmartDashboard.putNumber("Robot X", position.getX());
         SmartDashboard.putNumber("Robot Y", position.getY());
-        SmartDashboard.putNumber("Robot Gyro", getGyroRotation().getRadians());
+        SmartDashboard.putNumber("Robot Gyro", getGyroRotation2d().getRadians());
     }
 
     public double getHeading() {
-        return gyro.getAngle();
+        return -gyro.getAngle();
     }
 
     public double getPitch() {
         return gyro.getPitch();
     }
 
-    public double getPitchRate() {
-        gyro.getRawGyro(xyz_dps);
-        return xyz_dps[0];
-    }
-
     public void zeroGyro() {
         gyro.reset();
     }
 
-    public Rotation2d getGyroRotation() {
+    public Rotation2d getGyroRotation2d() {
         return gyro.getRotation2d();
     }
     
