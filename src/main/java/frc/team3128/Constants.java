@@ -3,6 +3,8 @@ package frc.team3128;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.FALCON_ENCODER_RESOLUTION;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.SPARKMAX_ENCODER_RESOLUTION;
 
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 public class Constants {
 
     public static class ConversionConstants {
@@ -30,7 +32,27 @@ public class Constants {
     }
 
     public static class IntakeConstants {
+    public static int ARM_MOTOR_ID = 0; 
+    public static int BRUSH_MOTOR_ID = 0; 
 
+    public static int ENCODER_CHANNEL_A = 0; //arm
+    public static int ENCODER_CHANNEL_B = 0; 
+
+    public static double BRUSH_MOTOR_POWER = 1; //rough estimate (negative was forward last year)
+    public static int ARM_MOTOR_POWER = 0; 
+    public static int ARM_OUTTAKE_MOTOR_POWER = 0; 
+    public static int ARM_GEAR_RATIO = 3/40; 
+    public static int ARM_CONVERSION_FACTOR = 360/ARM_GEAR_RATIO; 
+
+    public static int kP = 0; //should be a number
+    public static int kI = 0; //none
+    public static int kD = 0;
+    public static int kF = 0; 
+    public static double TOLERANCE_MIN = 0;
+
+    public static double MIN_ANGLE = 0; //estimate
+    public static double MAX_ANGLE = 6; 
+    
     }
 
     public static class ShooterConstants {
