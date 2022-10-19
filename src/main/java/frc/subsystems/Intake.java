@@ -7,11 +7,13 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import net.thefletcher.revrobotics.enums.MotorType;
-import frc.team3128.Constants.IntakeConstants;
+import frc.team3128.Constants.IntakeConstants; 
+import frc.team3128.common.utility.NAR_Shuffleboard; 
 
 /*
 * Intake subsystem for swervebot 2022
 * @author Kailani Minna-Choe
+* @since 2022 Rapid React offseason
 */
 
 public class Intake extends PIDSubsystem{ 
@@ -19,6 +21,8 @@ public class Intake extends PIDSubsystem{
     private NAR_CANSparkMax m_armMotor; 
     private NAR_TalonFX m_brushMotor; 
     private double tolerance = IntakeConstants.TOLERANCE_MIN; 
+    private double m_ff; 
+
     //private double time;
     //private double prevTime; 
 //one ff
@@ -45,10 +49,19 @@ public class Intake extends PIDSubsystem{
 
     //shuffleboard
     public void initShuffleboard(){
-        //General tab
-        //NAR_Shuffleboard.addData("General", "Intake Speed", m_intake::get).withPosition
+        //General - wait until with full robot
+        //NAR_Shuffleboard.addData("General", "Intake Brush Speed", m_brushMotor.get()); 
+        //withPosition(x, y); -> for logging 
         //Intake Tab
-        //NAR_Shuffleboard.addData(); 
+        NAR_Shuffleboard.addData("Intake", "Intake Brush Speed", m_brushMotor.get()); 
+        //PID Arm 
+        NAR_Shuffleboard.addData("Intake", "Intake Arm Speed", m_armMotor.get()); 
+        NAR_Shuffleboard.addComplex("Intake PID Arm", "Intake Arm", this); 
+        NAR_Shuffleboard.addData("Intake PID Arm", "Setpoint", m_armMotor.getSetpoint()); 
+        NAR_Shuffleboard.addData("Intake PID Arm", "Angle", getMeasurement()); 
+        NAR_Shuffleboard.addComplex("Intake PID Arm", "PID", this.m_controller); 
+        NAR_Shuffleboard.debug("Intake PID Arm", "ff", IntakeConstants.kF, IntakeConstants.x, 0);
+        NAR_Shuffleboard.debug("Intake PID Arm", "set angle", IntakeConstants.kF, IntakeConstants.x, 1);
     }
 
     public void resetEncoders(){
@@ -81,8 +94,8 @@ public class Intake extends PIDSubsystem{
     @Override
     protected void useOutput(double output, double setpoint) {
         setpoint = m_armMotor.getSetpoint(); 
-        double ff = IntakeConstants.kF * Math.cos(Units.degreesToRadians(setpoint)); //does need cos
-        double voltageOutput = output + ff; 
+        m_ff = IntakeConstants.kF * Math.cos(Units.degreesToRadians(setpoint)); //does need cos
+        double voltageOutput = output + m_ff; 
         
         m_armMotor.set(MathUtil.clamp(voltageOutput/12.0, -1, 1)); 
     }

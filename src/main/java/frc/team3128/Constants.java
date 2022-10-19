@@ -53,6 +53,8 @@ public class Constants {
     public static double MIN_ANGLE = 0; //estimate
     public static double MAX_ANGLE = 6; 
     
+    //Shuffleboard positions
+    public static int x = 5; 
     }
 
     public static class ShooterConstants {
