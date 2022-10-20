@@ -45,9 +45,7 @@ public class RobotContainer {
         leftStick = new NAR_Joystick(0);
         rightStick = new NAR_Joystick(1);
 
-        // TODO: default driving command here
-        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, true));
-
+        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, false));
 
         initDashboard();
         configureButtonBindings();

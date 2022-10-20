@@ -8,54 +8,48 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import static frc.team3128.Constants.SwerveConstants.*;
 
-public class CTREConfigs {
-    // TODO: check this is correctly written java lol
-    public static class SwerveConfigs {
-        public static TalonFXConfiguration swerveAngleMotorConfig = new TalonFXConfiguration();
-        public static TalonFXConfiguration swerveDriveMotorConfig = new TalonFXConfiguration();
-        public static CANCoderConfiguration swerveCanCoderConfig = new CANCoderConfiguration();
-
-        /* Swerve Angle Motor Configurations */
-        public static SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
-            angleEnableCurrentLimit, 
-            angleContinuousCurrentLimit, 
-            anglePeakCurrentLimit, 
-            anglePeakCurrentDuration);
-
-        static {
-            swerveAngleMotorConfig.slot0.kP = angleKP;
-            swerveAngleMotorConfig.slot0.kI = angleKI;
-            swerveAngleMotorConfig.slot0.kD = angleKD;
-            swerveAngleMotorConfig.slot0.kF = angleKF;
-            swerveAngleMotorConfig.supplyCurrLimit = angleSupplyLimit;
-            swerveAngleMotorConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
-        }
-
-        /* Swerve Drive Motor Configuration */
-        public static SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
+public final class CTREConfigs {
+    public static TalonFXConfiguration swerveDriveFXConfig() {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
             driveEnableCurrentLimit, 
             driveContinuousCurrentLimit, 
             drivePeakCurrentLimit, 
             drivePeakCurrentDuration);
 
-        static {
-            swerveDriveMotorConfig.slot0.kP = driveKP;
-            swerveDriveMotorConfig.slot0.kI = driveKI;
-            swerveDriveMotorConfig.slot0.kD = driveKD;
-            swerveDriveMotorConfig.slot0.kF = driveKF;        
-            swerveDriveMotorConfig.supplyCurrLimit = driveSupplyLimit;
-            swerveDriveMotorConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
-            swerveDriveMotorConfig.closedloopRamp = closedLoopRamp;
-        }
-
-        
-        /* Swerve CANCoder Configuration */
-        static {
-            swerveCanCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-            swerveCanCoderConfig.sensorDirection = canCoderInvert;
-            swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-            swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
-        }
+        config.slot0.kP = driveKP;
+        config.slot0.kI = driveKI;
+        config.slot0.kD = driveKD;
+        config.slot0.kF = driveKF;        
+        config.supplyCurrLimit = driveSupplyLimit;
+        config.initializationStrategy = SensorInitializationStrategy.BootToZero;
+        config.closedloopRamp = closedLoopRamp;
+        return config;
     }
 
+    public static TalonFXConfiguration swerveAngleFXConfig() {
+        TalonFXConfiguration angleConfig = new TalonFXConfiguration();
+        SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
+            angleEnableCurrentLimit, 
+            angleContinuousCurrentLimit, 
+            anglePeakCurrentLimit, 
+            anglePeakCurrentDuration);
+
+        angleConfig.slot0.kP = angleKP;
+        angleConfig.slot0.kI = angleKI;
+        angleConfig.slot0.kD = angleKD;
+        angleConfig.slot0.kF = angleKF;
+        angleConfig.supplyCurrLimit = angleSupplyLimit;
+        angleConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
+        return angleConfig;
+    }
+
+    public static CANCoderConfiguration swerveCancoderConfig() {
+        CANCoderConfiguration config = new CANCoderConfiguration();
+        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        config.sensorDirection = canCoderInvert;
+        config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        config.sensorTimeBase = SensorTimeBase.PerSecond;
+        return config;
+    }
 }

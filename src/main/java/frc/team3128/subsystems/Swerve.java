@@ -21,7 +21,8 @@ public class Swerve extends SubsystemBase {
     private static Swerve instance;
 
     public Swerve() {
-        gyro = new WPI_Pigeon2(0);
+        gyro = new WPI_Pigeon2(pigeonID);
+        gyro.configFactoryDefault();
         zeroGyro();
 
         odometry = new SwerveDriveOdometry(swerveKinematics, getGyroRotation2d());
@@ -58,6 +59,7 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) { // TODO: Call this!!!!
         odometry.resetPosition(pose, getGyroRotation2d());
+        zeroGyro(pose.getRotation().getDegrees());
     }
 
     public SwerveModuleState[] getStates() {
@@ -66,6 +68,14 @@ public class Swerve extends SubsystemBase {
             states[module.moduleNumber] = module.getState();
         }
         return states;
+    }
+
+    public void setModuleStates(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeed);
+        
+        for (SwerveModule module : modules){
+            module.setDesiredState(desiredStates[module.moduleNumber]);
+        }
     }
 
     @Override
@@ -84,7 +94,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getHeading() {
-        return -gyro.getAngle();
+        return gyro.getAngle();
     }
 
     public double getPitch() {
@@ -95,9 +105,15 @@ public class Swerve extends SubsystemBase {
         gyro.reset();
     }
 
-    public Rotation2d getGyroRotation2d() {
-        return gyro.getRotation2d();
+    public void zeroGyro(double reset) {
+        gyro.setYaw(reset);
     }
+
+
+    public Rotation2d getGyroRotation2d() {
+        return Rotation2d.fromDegrees(getHeading());
+    }
+    
     
     public static synchronized Swerve getInstance() {
         if (instance == null) {

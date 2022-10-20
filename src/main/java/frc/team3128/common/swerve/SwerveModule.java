@@ -4,6 +4,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -14,7 +16,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.common.swerve.FalconConversions.*;
 
-import static frc.team3128.common.swerve.CTREConfigs.SwerveConfigs.*;
+import static frc.team3128.common.swerve.CTREConfigs.*;
 
 public class SwerveModule {
     public final int moduleNumber;
@@ -57,6 +59,9 @@ public class SwerveModule {
         double angle = (Math.abs(desiredState.speedMetersPerSecond) <= (maxSpeed * 0.01)) ? lastAngle : desiredState.angle.getDegrees(); //Prevent rotating module if speed is less then 1%. Prevents Jittering.
         angleMotor.set(ControlMode.Position, degreesToFalcon(angle, angleGearRatio)); 
         lastAngle = angle;
+
+        SmartDashboard.putNumber("angle curr position" + moduleNumber, falconToDegrees(angleMotor.getSelectedSensorPosition(), angleGearRatio));
+        SmartDashboard.putNumber("angle set position" + moduleNumber, desiredState.angle.getDegrees());
     }
 
     private void resetToAbsolute(){
@@ -66,12 +71,12 @@ public class SwerveModule {
 
     private void configAngleEncoder(){        
         angleEncoder.configFactoryDefault();
-        angleEncoder.configAllSettings(swerveCanCoderConfig);
+        angleEncoder.configAllSettings(swerveCancoderConfig());
     }
 
     private void configAngleMotor(){
         angleMotor.configFactoryDefault();
-        angleMotor.configAllSettings(swerveAngleMotorConfig);
+        angleMotor.configAllSettings(swerveAngleFXConfig());
         angleMotor.setInverted(angleMotorInvert);
         angleMotor.setNeutralMode(NeutralMode.Coast);
         resetToAbsolute();
@@ -79,14 +84,17 @@ public class SwerveModule {
 
     private void configDriveMotor(){        
         driveMotor.configFactoryDefault();
-        driveMotor.configAllSettings(swerveDriveMotorConfig);
+        driveMotor.configAllSettings(swerveDriveFXConfig());
         driveMotor.setInverted(driveMotorInvert);
-        driveMotor.setNeutralMode(NeutralMode.Coast);
+        driveMotor.setNeutralMode(NeutralMode.Brake); 
         driveMotor.setSelectedSensorPosition(0);
+        if (moduleNumber == 2) {
+            driveMotor.setInverted(!driveMotorInvert);
+        }
     }
 
     public Rotation2d getCanCoder(){
-        return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
+        return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition() - angleOffset);
     }
 
     public SwerveModuleState getState(){
