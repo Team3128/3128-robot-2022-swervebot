@@ -16,17 +16,15 @@ public class CmdExtendIntake extends WaitCommand{
 
     @Override
     public void initialize(){
+        super.initialize();
         m_intake.reverseIntake(IntakeConstants.ARM_OUTTAKE_MOTOR_POWER);
-        //intake
+        m_intake.extendIntake(); 
     }
 
     @Override
     public void end(boolean interruped){
+        super.end(interruped);
         m_intake.stopIntake();
         m_intake.retractIntake();
-    }
-
-    public boolean isFinished(){
-        return false; 
     }
 }
