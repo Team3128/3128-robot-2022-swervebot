@@ -30,11 +30,15 @@ public class Constants {
         public static final int HOPPER_MOTOR_2_ID  = 2;
         public static final int HOPPER_MOTOR_OUTTAKE_ID  = 3;
         public static final int HOPPER_MOTOR_SERIALIZER_ID  = 4;
+        public static final int HOPPER_MOTOR_SHOOT_ID = 5;
+
         public static final int HOPPER_MOTOR_POWER = 1;
-        public static final int HOPPER_MOTOR_2_POWER = 1;
-        public static final int SERIALIZER_MOTOR_POWER = 1;
-        public static final int HOPPER_MOTOR_OUTTAKE_POWER = 1;
+        public static final int HOPPER_SERIALIZER_POWER = 1;
+        public static final int HOPPER_OUTTAKE_POWER = 1;
+        public static final int HOPPER_SHOOT_POWER = 1;
+
         public static final double COLOR_SENSOR_TOLERANCE = 1.5;
+
 
     }
 
