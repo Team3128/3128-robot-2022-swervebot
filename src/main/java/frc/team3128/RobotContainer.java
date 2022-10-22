@@ -41,11 +41,11 @@ public class RobotContainer {
         swerve = Swerve.getInstance();
 
         //TODO: Enable all PIDSubsystems so that useOutput runs here
-
+// 
         leftStick = new NAR_Joystick(0);
         rightStick = new NAR_Joystick(1);
 
-        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, false));
+        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, true));
 
         initDashboard();
         configureButtonBindings();

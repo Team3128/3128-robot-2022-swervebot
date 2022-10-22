@@ -56,7 +56,7 @@ public class SwerveModule {
         double velocity = MPSToFalcon(desiredState.speedMetersPerSecond, wheelCircumference, driveGearRatio);
         driveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward, feedforward.calculate(desiredState.speedMetersPerSecond));
 
-        double angle = (Math.abs(desiredState.speedMetersPerSecond) <= (maxSpeed * 0.01)) ? lastAngle : desiredState.angle.getDegrees(); //Prevent rotating module if speed is less then 1%. Prevents Jittering.
+        double angle = (Math.abs(desiredState.speedMetersPerSecond) <= (maxSpeed * 0.025)) ? lastAngle : desiredState.angle.getDegrees(); //Prevent rotating module if speed is less then 1%. Prevents Jittering.
         angleMotor.set(ControlMode.Position, degreesToFalcon(angle, angleGearRatio)); 
         lastAngle = angle;
 
@@ -65,7 +65,7 @@ public class SwerveModule {
     }
 
     private void resetToAbsolute(){
-        double absolutePosition = degreesToFalcon(getCanCoder().getDegrees() - angleOffset, angleGearRatio);
+        double absolutePosition = degreesToFalcon(getCanCoder().getDegrees(), angleGearRatio);
         angleMotor.setSelectedSensorPosition(absolutePosition);
     }
 
@@ -88,9 +88,6 @@ public class SwerveModule {
         driveMotor.setInverted(driveMotorInvert);
         driveMotor.setNeutralMode(NeutralMode.Brake); 
         driveMotor.setSelectedSensorPosition(0);
-        if (moduleNumber == 2) {
-            driveMotor.setInverted(!driveMotorInvert);
-        }
     }
 
     public Rotation2d getCanCoder(){

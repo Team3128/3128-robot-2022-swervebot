@@ -20,9 +20,9 @@ public class NAR_Joystick {
      */
     private Trigger[] povButtons;
 
-    private double xDeadband = 0.05;
-    private double yDeadband = 0.05;
-    private double zDeadband = 0.05;
+    private double xDeadband = 0.1;
+    private double yDeadband = 0.1;
+    private double zDeadband = 0.1;
     private double throttleLowerBound = 0.3;
     private double throttleUpperBound = 0.8;
 
