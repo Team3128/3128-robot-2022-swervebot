@@ -98,7 +98,7 @@ public class Shooter extends PIDSubsystem {
         return m_leftShooter.getSelectedSensorPosition() * ConversionConstants.FALCON_NUpS_TO_RPM;
     }
 
-    private void resetPlateauCount() {
+    public void resetPlateauCount() {
         plateauConunt = 0;
     }
 
