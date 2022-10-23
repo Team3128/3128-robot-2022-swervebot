@@ -58,20 +58,20 @@ public class Constants {
 
         /* Drive Motor PID Values */
         // need to characterize this
-        public static final double driveKP = 0.05; // citrus: 0.05
+        public static final double driveKP = 0.05; // citrus: 0.05 //sysid 2.9424
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values */
         // TODO: need to characterize
-        public static final double driveKS = (0.32 / 12);
-        public static final double driveKV = (1.51 / 12);
-        public static final double driveKA = (0.27 / 12);
+        public static final double driveKS = (0.49321 / 12);
+        public static final double driveKV = (2.4466 / 12);
+        public static final double driveKA = (0.22036 / 12);
 
         /* Swerve Profiling Values */
         public static final double maxSpeed = 4.5; // 4.96824; // citrus: 4.5 //meters per second - 16.3 ft/sec
-        public static final double maxAngularVelocity = 10; //11.5; // citrus: 10
+        public static final double maxAngularVelocity = 5; //11.5; // citrus: 10
 
         /* Motor Inverts */
         public static final boolean driveMotorInvert = false;
@@ -97,7 +97,7 @@ public class Constants {
             public static final int driveMotorID = 3;
             public static final int angleMotorID = 4;
             public static final int canCoderID = 1;
-            public static final double angleOffset = 311.66015625; //132.5390625; //311.8359375; //10.45; // degrees
+            public static final double angleOffset = 311.66015625 - 360; //132.5390625; //311.8359375; //10.45; // degrees
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }

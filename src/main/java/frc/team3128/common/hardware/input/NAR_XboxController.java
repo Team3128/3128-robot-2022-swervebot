@@ -42,5 +42,25 @@ public class NAR_XboxController extends XboxController {
     public Trigger getRightTrigger() {
         return new Trigger (() -> getRightTriggerAxis() >= 0.5);
     }
+
+    @Override
+    public double getRightX() {
+        return Math.abs(getRawAxis(Axis.kRightX.value) * 2 - 1) > 0.05 ? getRawAxis(Axis.kRightX.value) * 2 - 1:0;
+    }
+
+    @Override
+    public double getRightY() {
+        return Math.abs(getRawAxis(Axis.kRightY.value) * 2 - 1) > 0.05 ? getRawAxis(Axis.kRightY.value) * 2 - 1:0;
+    }
+
+    @Override
+    public double getLeftX() {
+        return Math.abs(getRawAxis(Axis.kLeftX.value) * 2 - 1) > 0.05 ? getRawAxis(Axis.kLeftX.value) * 2 - 1:0;
+    }
+
+    @Override
+    public double getLeftY() {
+        return Math.abs(getRawAxis(Axis.kLeftY.value) * 2 - 1) > 0.05 ? getRawAxis(Axis.kLeftY.value) * 2 - 1:0;
+    }
     
 }

@@ -19,11 +19,13 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] modules;
     public static WPI_Pigeon2 gyro;
     private static Swerve instance;
+    public boolean fieldRelative;
 
     public Swerve() {
         gyro = new WPI_Pigeon2(pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
+        fieldRelative = true;
 
         odometry = new SwerveDriveOdometry(swerveKinematics, getGyroRotation2d());
 
@@ -69,6 +71,14 @@ public class Swerve extends SubsystemBase {
         }
         return states;
     }
+    
+    public void toggle() {
+        if (fieldRelative) {
+            fieldRelative = false;
+            return;
+        }
+        fieldRelative = true;
+    }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeed);
@@ -90,11 +100,11 @@ public class Swerve extends SubsystemBase {
         Translation2d position = pose.getTranslation();
         SmartDashboard.putNumber("Robot X", position.getX());
         SmartDashboard.putNumber("Robot Y", position.getY());
-        SmartDashboard.putNumber("Robot Gyro", getGyroRotation2d().getRadians());
+        SmartDashboard.putNumber("Robot Gyro", getGyroRotation2d().getDegrees());
     }
 
     public double getHeading() {
-        return gyro.getAngle();
+        return -gyro.getAngle() - 90;
     }
 
     public double getPitch() {
@@ -111,7 +121,7 @@ public class Swerve extends SubsystemBase {
 
 
     public Rotation2d getGyroRotation2d() {
-        return Rotation2d.fromDegrees(getHeading()+90);
+        return Rotation2d.fromDegrees(getHeading());
     }
     
     public static synchronized Swerve getInstance() {
