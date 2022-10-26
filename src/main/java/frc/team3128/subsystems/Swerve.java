@@ -104,7 +104,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getHeading() {
-        return -gyro.getAngle() - 90;
+        return -gyro.getAngle() + 90;
     }
 
     public double getPitch() {

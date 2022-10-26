@@ -86,7 +86,7 @@ public class SwerveModule {
         driveMotor.configFactoryDefault();
         driveMotor.configAllSettings(swerveDriveFXConfig());
         driveMotor.setInverted(driveMotorInvert);
-        driveMotor.setNeutralMode(NeutralMode.Brake); 
+        driveMotor.setNeutralMode(NeutralMode.Coast); 
         driveMotor.setSelectedSensorPosition(0);
     }
 
