@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.swerve.SwerveModule;
 import static frc.team3128.Constants.SwerveConstants.*;
 
+import javax.lang.model.element.ModuleElement;
+
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry odometry;
     public SwerveModule[] modules;
@@ -41,11 +43,15 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] moduleStates = swerveKinematics.toSwerveModuleStates(
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(), translation.getY(), rotation, getGyroRotation2d())
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+                : new ChassisSpeeds(translation.getY(), -translation.getX(), rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxSpeed);
 
+        setStates(moduleStates);
+    }
+
+    public void setStates(SwerveModuleState[] states) {
         for (SwerveModule module : modules) {
-            module.setDesiredState(moduleStates[module.moduleNumber]);
+            module.setDesiredState(states[module.moduleNumber]);
         }
     }
 

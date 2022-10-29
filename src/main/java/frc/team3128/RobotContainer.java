@@ -51,8 +51,8 @@ public class RobotContainer {
         rightStick = new NAR_Joystick(1);
         controller = new NAR_XboxController(2);
 
-        //commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, true));
-        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, ()->0.3, true));
+        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, true));
+        // commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, ()->0.3, true));
         initDashboard();
         configureButtonBindings();
         
@@ -63,6 +63,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         rightStick.getButton(1).whenActive(new InstantCommand(swerve::zeroGyro));
         rightStick.getButton(2).whenActive(new InstantCommand(swerve::toggle));
+
     }
 
     public void init() {
