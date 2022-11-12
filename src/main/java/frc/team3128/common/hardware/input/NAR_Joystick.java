@@ -57,7 +57,7 @@ public class NAR_Joystick {
 
     /**  @return Joystick Z on [-1, 1], -1 is twist left, 1 is twist right - default deadband is 0.05 */
     public double getZ() {
-        return Math.abs(stick.getZ()) > zDeadband ? stick.getZ() : 0;
+        return Math.abs(stick.getZ()) > zDeadband ? -stick.getZ() : 0;
     }
 
     /** Alias of getZ */

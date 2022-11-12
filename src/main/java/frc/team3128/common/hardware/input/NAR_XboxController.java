@@ -45,22 +45,22 @@ public class NAR_XboxController extends XboxController {
 
     @Override
     public double getRightX() {
-        return Math.abs(super.getRightX()) > 0.05 ? super.getRightX():0;
+        return Math.abs(super.getRightX()) > 0.1 ? -super.getRightX():0;
     }
 
     @Override
     public double getRightY() {
-        return Math.abs(super.getRightY()) > 0.05 ? -super.getRightY():0;
+        return Math.abs(super.getRightY()) > 0.1 ? -super.getRightY():0;
     }
 
     @Override
     public double getLeftX() {
-        return Math.abs(super.getLeftX()) > 0.05 ? super.getLeftX():0;
+        return Math.abs(super.getLeftX()) > 0.1 ? super.getLeftX():0;
     }
 
     @Override
     public double getLeftY() {
-        return Math.abs(super.getLeftY()) > 0.05 ? -super.getLeftY():0;
+        return Math.abs(super.getLeftY()) > 0.1 ? -super.getLeftY():0;
     }
     
 }
