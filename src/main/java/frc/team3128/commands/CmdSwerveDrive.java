@@ -38,7 +38,7 @@ public class CmdSwerveDrive extends CommandBase {
         // deadbands are taken care of in NAR_Joystick
         // TODO: add in slewratelimiter here
         translation = new Translation2d(xAxis.getAsDouble(), yAxis.getAsDouble()).times(throttle.getAsDouble()).times(maxSpeed);
-        rotation = zAxis.getAsDouble() * maxAngularVelocity; // * throttle.getAsDouble();
+        rotation = zAxis.getAsDouble() * Math.abs(zAxis.getAsDouble()) * maxAngularVelocity; // * throttle.getAsDouble();
         SmartDashboard.putBoolean("fieldOriented",swerve.fieldRelative);
         swerve.drive(translation, rotation, swerve.fieldRelative);
 

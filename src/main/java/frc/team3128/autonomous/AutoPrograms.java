@@ -30,7 +30,7 @@ public class AutoPrograms {
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
         // String selectedAutoName = "3 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
-        selectedAutoName = "Marriage";
+        selectedAutoName = "3Ball"; //"Marriage";
 
         if (selectedAutoName == null) {
             return null;
@@ -44,6 +44,10 @@ public class AutoPrograms {
                 initialPose = Trajectories.get("Marriage").getInitialPose();
                 autoCommand = Trajectories.path("Marriage");
                 break;
+            case("3Ball"):
+                initialPose = Trajectories.get("3Ball").getInitialPose();
+                autoCommand = Trajectories.path("3Ball");
+                break;    
             default: 
                 Log.info("Auto Selector", "Something went wrong in getting the auto name - misspelling?");
                 break;

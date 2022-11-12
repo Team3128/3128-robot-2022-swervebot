@@ -69,10 +69,18 @@ public class Constants {
         public static final double driveKV = (2.4466 / 12);
         public static final double driveKA = (0.22036 / 12);
 
+        /*Chasis Turing PID Values*/
+        public static final double turnKP = 0.65;
+        public static final double turnKI = 0;
+        public static final double turnKD = 0;
+        public static final double turnKF = 0;
+
+        public static final double turnTolerance = 2;
+
         /* Swerve Profiling Values */
-        public static final double maxSpeed = 4.5; //4.5// 4.96824; // citrus: 4.5 //meters per second - 16.3 ft/sec
+        public static final double maxSpeed = 3; //4.5// 4.96824; // citrus: 4.5 //meters per second - 16.3 ft/sec
         public static final double maxAcceleration = 2;
-        public static final double maxAngularVelocity = 7.5; //11.5; // citrus: 10
+        public static final double maxAngularVelocity = 3; //11.5; // citrus: 10
 
         /* Motor Inverts */
         public static final boolean driveMotorInvert = false;
@@ -90,7 +98,7 @@ public class Constants {
             public static final int canCoderID = 20;
             public static final double angleOffset = -156.357421875;//-46.5 + 90; //104.5;//19.599609375; // 19.51171875;//-51.85546875; // 37.35; // degrees
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, true);
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Front Right Module - Module 1 */
@@ -100,7 +108,7 @@ public class Constants {
             public static final int canCoderID = 21;
             public static final double angleOffset = 126.38671875000001; //23.466 + 90;//-132.25;//311.66015625 - 360; //132.5390625; //311.8359375; //10.45; // degrees
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, true);
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
         
         /* Back Left Module - Module 2 */
@@ -110,7 +118,7 @@ public class Constants {
             public static final int canCoderID = 22;
             public static final double angleOffset = -72.0703125;//-70.751953125; //-70.75; //109.51171875; //38.75; // degrees
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Back Right Module - Module 3 */
@@ -120,7 +128,7 @@ public class Constants {
             public static final int canCoderID = 23;
             public static final double angleOffset = -52.91015625; //-52.9; //306.2109375; //307.6171875; // 58.88; // degrees
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
     }
 

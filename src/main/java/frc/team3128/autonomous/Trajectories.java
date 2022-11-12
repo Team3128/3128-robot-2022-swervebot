@@ -29,7 +29,7 @@ public class Trajectories {
     private static HashMap<String, PathPlannerTrajectory> trajectories = new HashMap<String,PathPlannerTrajectory>();
 
     static{
-        final String[] trajectoryNames = {"Marriage"};
+        final String[] trajectoryNames = {"Marriage", "3Ball"};
         for (String trajectoryName : trajectoryNames) {
             trajectories.put(trajectoryName, PathPlanner.loadPath(trajectoryName, SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration));
             //Path path = Filesystem.getDeployDirectory().toPath().resolve("paths").resolve(trajectoryName + ".wpilib.json");
