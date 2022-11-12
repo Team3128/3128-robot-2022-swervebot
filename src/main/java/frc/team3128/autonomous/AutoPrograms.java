@@ -1,9 +1,11 @@
 package frc.team3128.autonomous;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.subsystems.Swerve;
 
 /**
  * Class to store information about autonomous routines.
@@ -12,7 +14,10 @@ import frc.team3128.common.utility.Log;
 
 public class AutoPrograms {
 
+    private static Swerve swerve;
+
     public AutoPrograms() {
+        swerve = Swerve.getInstance();
 
         initAutoSelector();
     }
@@ -25,6 +30,7 @@ public class AutoPrograms {
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
         // String selectedAutoName = "3 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
+        selectedAutoName = "3Ball"; //"Marriage";
 
         if (selectedAutoName == null) {
             return null;
@@ -34,12 +40,20 @@ public class AutoPrograms {
         Command autoCommand = null;
 
         switch (selectedAutoName) {
+            case("Marriage"):
+                initialPose = Trajectories.get("Marriage").getInitialPose();
+                autoCommand = Trajectories.path("Marriage");
+                break;
+            case("3Ball"):
+                initialPose = Trajectories.get("3Ball").getInitialPose();
+                autoCommand = Trajectories.path("3Ball");
+                break;    
             default: 
                 Log.info("Auto Selector", "Something went wrong in getting the auto name - misspelling?");
                 break;
         }
 
-        // drive.resetPose(initialPose);
+        swerve.resetOdometry(initialPose);
         return autoCommand;
     }
     
@@ -57,6 +71,6 @@ public class AutoPrograms {
      * Flip 180 degrees rotation wise but keep same pose translation 
      */
     private Pose2d inverseRotation(Pose2d pose) {
-        return new Pose2d(pose.getTranslation(), pose.getRotation().unaryMinus());
+        return new Pose2d(pose.getTranslation(), new Rotation2d(pose.getRotation().getRadians() + Math.PI));
     }
 }
