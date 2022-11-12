@@ -1,8 +1,11 @@
 package frc.team3128.subsystems;
 
+import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.Collection;
@@ -26,7 +29,9 @@ public class Vision extends SubsystemBase{
     }
 
     public Vision() {
+        cameras = new HashMap<String,NAR_Camera>();
         NAR_Camera shooter_limelight = new NAR_Camera(Camera.SHOOTER);
+        Shuffleboard.getTab("Test").add(new HttpCamera("limelight-sog", "http://10.31.28.25:5800/stream.mjpg"));
         cameras.put("Shooter", shooter_limelight);
     }
 
@@ -73,18 +78,11 @@ public class Vision extends SubsystemBase{
     public Collection<NAR_Camera> getCameras(){
         return cameras.values();
     }
-
-    public Pose2d visionEstimatedPose(double gyroAngle) {
-        /*DO NOT USE UNLESS LIMELIGHT HAS A VALID TARGET */
-        double distToHubCenter = cameras.get("Shooter").get_distance() + HUB_RADIUS;
-        Rotation2d thetaHub = Rotation2d.fromDegrees(gyroAngle - cameras.get("Shooter").target_yaw());
-        Translation2d fieldPos = new Translation2d(-distToHubCenter * Math.cos(thetaHub.getRadians()), -distToHubCenter * Math.sin(thetaHub.getRadians()))
-                                    .plus(HUB_POSITION.getTranslation());
-        return new Pose2d(fieldPos, Rotation2d.fromDegrees(gyroAngle));
-    }
     
     @Override
     public void periodic(){
+        SmartDashboard.putNumber("Area",cameras.get("Shooter").target_area());
+        SmartDashboard.putBoolean("ValidTarget",cameras.get("Shooter").hasValidTarget());
         for (NAR_Camera cam : getCameras()) {
             cam.update();
         }

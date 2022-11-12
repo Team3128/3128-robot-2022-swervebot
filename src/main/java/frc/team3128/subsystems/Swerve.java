@@ -2,6 +2,8 @@ package frc.team3128.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -9,22 +11,36 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team3128.Constants.FieldConstants;
 import frc.team3128.common.swerve.SwerveModule;
 import static frc.team3128.Constants.SwerveConstants.*;
+import static frc.team3128.Constants.VisionConstants.*;
+
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry odometry;
+    public SwerveDrivePoseEstimator odometry;
     public SwerveModule[] modules;
     public static WPI_Pigeon2 gyro;
     private static Swerve instance;
+    private Pose2d estimatedPose;
 
     public Swerve() {
         gyro = new WPI_Pigeon2(0);
         zeroGyro();
 
-        odometry = new SwerveDriveOdometry(swerveKinematics, getGyroRotation2d());
+        odometry = new SwerveDrivePoseEstimator(
+            getGyroRotation2d(),
+            new Pose2d(),
+            swerveKinematics, 
+            SVR_STATE_STD,
+            SVR_LOCAL_MEASUREMENT_STD,
+            SVR_VISION_MEASUREMENT_STD
+            );
 
         modules = new SwerveModule[] {
             new SwerveModule(0, Mod0.constants),
@@ -53,10 +69,17 @@ public class Swerve extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return odometry.getPoseMeters();
+        return estimatedPose;
+    }
+
+    public void resetEncoders() {
+        for (SwerveModule module : modules) {
+            module.resetEncoders();
+        }
     }
 
     public void resetOdometry(Pose2d pose) { // TODO: Call this!!!!
+        resetEncoders();
         odometry.resetPosition(pose, getGyroRotation2d());
     }
 
@@ -76,15 +99,15 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + module.moduleNumber + " Integrated", module.getState().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + module.moduleNumber + " Velocity", module.getState().speedMetersPerSecond);    
         }
-        Pose2d pose = odometry.getPoseMeters();
-        Translation2d position = pose.getTranslation();
+        estimatedPose = odometry.getEstimatedPosition();
+        Translation2d position = estimatedPose.getTranslation();
         SmartDashboard.putNumber("Robot X", position.getX());
         SmartDashboard.putNumber("Robot Y", position.getY());
         SmartDashboard.putNumber("Robot Gyro", getGyroRotation2d().getRadians());
     }
 
-    public double getHeading() {
-        return -gyro.getAngle();
+    public double getYaw() {
+        return gyro.getYaw();
     }
 
     public double getPitch() {
@@ -98,6 +121,10 @@ public class Swerve extends SubsystemBase {
     public Rotation2d getGyroRotation2d() {
         return gyro.getRotation2d();
     }
+
+    public double getHeading() {
+        return estimatedPose.getRotation().getDegrees();
+    }
     
     public static synchronized Swerve getInstance() {
         if (instance == null) {
@@ -106,4 +133,14 @@ public class Swerve extends SubsystemBase {
         return instance;
     }
     
+    public double calculateDegreesToTurn(){
+        double alpha = getHeading();
+        return MathUtil.inputModulus(calculateDesiredAngle() - alpha,-180,180);
+    }
+
+    public double calculateDesiredAngle(){
+        Pose2d location = getPose().relativeTo(FieldConstants.HUB_POSITION);
+        double theta = Math.toDegrees(Math.atan2(location.getY(),location.getX()));
+        return MathUtil.inputModulus(theta - 180,-180,180);
+    }
 }

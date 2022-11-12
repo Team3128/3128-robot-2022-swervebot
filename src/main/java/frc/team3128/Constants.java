@@ -5,7 +5,13 @@ import static frc.team3128.common.hardware.motorcontroller.MotorControllerConsta
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import frc.team3128.common.swerve.SwerveModuleConstants;
+import frc.team3128.common.utility.interpolation.InterpolatingDouble;
+import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -173,6 +179,20 @@ public class Constants {
         public static final double TX_THRESHOLD = 3;
 
         public static final double AREA_THRESHOLD = 0;
+
+        public static final double TARGET_AREA = 6.25 * 6.25; //inches
+
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> visionMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+
+        public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(0.05,0.05,Units.degreesToRadians(0));
+ 
+        public static final Matrix<N1,N1> SVR_LOCAL_MEASUREMENT_STD = VecBuilder.fill(Units.degreesToRadians(0));
+ 
+        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(0.5,0.5,Units.degreesToRadians(0));
+
+        static {
+            visionMap.put(new InterpolatingDouble(3.34),new InterpolatingDouble(4.0));
+        }
     }
     
     public static class FieldConstants{

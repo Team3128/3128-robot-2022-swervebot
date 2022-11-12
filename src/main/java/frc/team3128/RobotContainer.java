@@ -28,9 +28,6 @@ public class RobotContainer {
     private Swerve swerve;
     private Vision vision;
 
-    private NAR_Joystick m_leftStick;
-    private NAR_Joystick m_rightStick;
-
     private NAR_Joystick leftStick;
     private NAR_Joystick rightStick;
 
@@ -72,7 +69,7 @@ public class RobotContainer {
     private void initDashboard() {
         if (DEBUG) {
             SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
-            SmartDashboard.putData("Swerve", swerve);
+            //SmartDashboard.putData("Swerve", swerve);
         }
 
         NarwhalDashboard.startServer();   
