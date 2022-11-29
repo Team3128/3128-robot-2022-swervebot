@@ -17,7 +17,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import frc.team3128.common.utility.Log;
-import frc.team3128.common.hardware.limelight.*;
+import frc.team3128.common.hardware.camera.*;
+import frc.team3128.common.hardware.camera.NAR_Camera.Pipeline;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.ConstantsInt;

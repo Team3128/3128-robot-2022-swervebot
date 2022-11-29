@@ -23,11 +23,20 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class Swerve extends SubsystemBase {
+    
     public SwerveDrivePoseEstimator odometry;
     public SwerveModule[] modules;
-    public static WPI_Pigeon2 gyro;
-    private static Swerve instance;
+    public WPI_Pigeon2 gyro;
     private Pose2d estimatedPose;
+
+    private static Swerve instance;
+
+    public static synchronized Swerve getInstance() {
+        if (instance == null) {
+            instance = new Swerve();
+        }
+        return instance;
+    }
 
     public Swerve() {
         gyro = new WPI_Pigeon2(0);
@@ -80,6 +89,7 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) { // TODO: Call this!!!!
         resetEncoders();
+        zeroGyro(pose.getRotation().getDegrees());
         odometry.resetPosition(pose, getGyroRotation2d());
     }
 
@@ -106,8 +116,8 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("Robot Gyro", getGyroRotation2d().getRadians());
     }
 
-    public double getYaw() {
-        return gyro.getYaw();
+    private double getYaw() {
+        return gyro.getYaw() + 90;
     }
 
     public double getPitch() {
@@ -118,19 +128,20 @@ public class Swerve extends SubsystemBase {
         gyro.reset();
     }
 
+    public void zeroGyro(double reset) {
+        gyro.setYaw(reset);
+    }
+
     public Rotation2d getGyroRotation2d() {
-        return gyro.getRotation2d();
+        return Rotation2d.fromDegrees(getYaw());
+    }
+
+    public Rotation2d getRotation2d() {
+        return estimatedPose.getRotation();
     }
 
     public double getHeading() {
-        return estimatedPose.getRotation().getDegrees();
-    }
-    
-    public static synchronized Swerve getInstance() {
-        if (instance == null) {
-            instance = new Swerve();
-        }
-        return instance;
+        return getRotation2d().getDegrees();
     }
     
     public double calculateDegreesToTurn(){

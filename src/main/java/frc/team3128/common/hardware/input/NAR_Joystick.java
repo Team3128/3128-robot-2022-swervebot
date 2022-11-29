@@ -34,8 +34,8 @@ public class NAR_Joystick {
         // Thrustmaster joystick has 16 buttons
 
         for (int i = 0; i < 16; i++) {
-            int buttonId = i;
-            buttons[buttonId] = new Trigger(()->stick.getRawButton(buttonId)); 
+            int buttonId = i+1;
+            buttons[buttonId-1] = new Trigger(()->stick.getRawButton(buttonId)); 
         }
             
         for (int i = 0; i < 8; i++) {
