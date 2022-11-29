@@ -6,6 +6,8 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.Constants.SwerveConstants;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
@@ -47,6 +49,7 @@ public class AutoPrograms {
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
         // String selectedAutoName = "3 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
+        selectedAutoName = ""; //"Marriage";
 
         if (selectedAutoName == null) {
             return null;
@@ -55,13 +58,28 @@ public class AutoPrograms {
         Pose2d initialPose = null;
         Command autoCommand = null;
 
-        switch (selectedAutoName) {
-            default: 
-                Log.info("Auto Selector", "Something went wrong in getting the auto name - misspelling?");
-                break;
-        }
+        // switch (selectedAutoName) {
+        //     case("Marriage"):
+        //         initialPose = Trajectories.get("Marriage").getInitialPose();
+        //         autoCommand = Trajectories.path("Marriage");
+        //         break;
+        //     case("3Ball"):
+        //         initialPose = Trajectories.get("3Ball").getInitialPose();
+        //         autoCommand = Trajectories.path("3Ball");
+        //         break; 
+        //     case("Forward"):
+        //         initialPose = Trajectories.get("Forward").getInitialPose();
+        //         autoCommand = Trajectories.path("Forward");
+        //         break;
+        //     case("180Turn"):
+        //         initialPose = Trajectories.get("Forward").getInitialPose();
+        //         autoCommand = new CmdInPlaceTurn(180);
+        //     default: 
+        //         Log.info("Auto Selector", "Something went wrong in getting the auto name - misspelling?");
+        //         break;
+        // }
 
-        // drive.resetPose(initialPose);
+        swerve.resetOdometry(initialPose);
         return autoCommand;
     }
     
@@ -79,6 +97,6 @@ public class AutoPrograms {
      * Flip 180 degrees rotation wise but keep same pose translation 
      */
     private Pose2d inverseRotation(Pose2d pose) {
-        return new Pose2d(pose.getTranslation(), pose.getRotation().unaryMinus());
+        return new Pose2d(pose.getTranslation(), new Rotation2d(pose.getRotation().getRadians() + Math.PI));
     }
 }

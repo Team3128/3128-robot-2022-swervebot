@@ -3,6 +3,7 @@ package frc.team3128.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team3128.subsystems.Swerve;
 import static frc.team3128.Constants.SwerveConstants.*;
@@ -37,8 +38,9 @@ public class CmdSwerveDrive extends CommandBase {
         // deadbands are taken care of in NAR_Joystick
         // TODO: add in slewratelimiter here
         translation = new Translation2d(xAxis.getAsDouble(), yAxis.getAsDouble()).times(throttle.getAsDouble()).times(maxSpeed);
-        rotation = zAxis.getAsDouble() * maxAngularVelocity; // * throttle.getAsDouble();
-        swerve.drive(translation, rotation, fieldRelative);
+        rotation = zAxis.getAsDouble() * Math.abs(zAxis.getAsDouble()) * maxAngularVelocity; // * throttle.getAsDouble();
+        SmartDashboard.putBoolean("fieldOriented",swerve.fieldRelative);
+        swerve.drive(translation, rotation, swerve.fieldRelative);
 
     }
 

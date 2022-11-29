@@ -1,5 +1,7 @@
 package frc.team3128;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team3128.commands.CmdSwerveDrive;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.camera.NAR_Camera;
+import frc.team3128.common.hardware.input.NAR_XboxController;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Swerve;
@@ -33,6 +36,8 @@ public class RobotContainer {
     private NAR_Joystick leftStick;
     private NAR_Joystick rightStick;
 
+    private NAR_XboxController controller;
+
     private CommandScheduler commandScheduler = CommandScheduler.getInstance();
   
     private boolean DEBUG = true; 
@@ -46,13 +51,13 @@ public class RobotContainer {
 
         //TODO: Enable all PIDSubsystems so that useOutput runs here
 
+// 
         leftStick = new NAR_Joystick(0);
         rightStick = new NAR_Joystick(1);
+        controller = new NAR_XboxController(2);
 
-        // TODO: default driving command here
-        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, true));
-
-
+        //commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(rightStick::getX, rightStick::getY, rightStick::getZ, rightStick::getThrottle, true));
+        commandScheduler.setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, rightStick::getThrottle, true));
         initDashboard();
         configureButtonBindings();
         
@@ -61,11 +66,9 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        rightStick.getButton(1).whenActive(new InstantCommand(
-            ()-> cam.setLED(cam.getLEDMode().toString() == "Off")
-            ));
-        rightStick.getButton(2).whenActive(new InstantCommand(()-> cam.setLED(true)));
-        rightStick.getButton(3).whenActive(new InstantCommand(()-> cam.setLED(false)));
+        rightStick.getButton(1).whenActive(new InstantCommand(swerve::zeroGyro));
+        rightStick.getButton(2).whenActive(new InstantCommand(swerve::toggle));
+        rightStick.getButton(3).whenActive(new InstantCommand(()->swerve.resetOdometry(new Pose2d(0,0, new Rotation2d(0)))));
     }
 
     public void init() {
@@ -93,5 +96,9 @@ public class RobotContainer {
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("x", swerve.getPose().getX());
         NarwhalDashboard.put("y", swerve.getPose().getY());
+        SmartDashboard.putNumber("LeftX",controller.getLeftX());
+        SmartDashboard.putNumber("LeftY",controller.getLeftY());
+        SmartDashboard.putNumber("RightX",controller.getRightX());
+        SmartDashboard.putNumber("RightY",controller.getRightY());
     }
 }

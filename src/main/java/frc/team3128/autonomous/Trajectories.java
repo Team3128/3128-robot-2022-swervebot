@@ -8,6 +8,7 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.team3128.Constants.SwerveConstants;
 
 /**
  * Store trajectories for autonomous. Edit points here. 
@@ -38,9 +40,10 @@ public class Trajectories {
 
     public static PathPlannerTrajectory line(Pose2d pos1, Pose2d pos2) {
         return PathPlanner.generatePath(
-            new PathConstraints(4, 4), 
-            pos1, 
-            pos2);
+            new PathConstraints(SwerveConstants.maxSpeed, 4), 
+            new PathPoint(pos1.getTranslation(), pos1.getRotation()), 
+            new PathPoint(pos2.getTranslation(), pos2.getRotation())
+            );
     }
     
 }

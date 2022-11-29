@@ -20,9 +20,9 @@ public class NAR_Joystick {
      */
     private Trigger[] povButtons;
 
-    private double xDeadband = 0.05;
-    private double yDeadband = 0.05;
-    private double zDeadband = 0.05;
+    private double xDeadband = 0.1;
+    private double yDeadband = 0.1;
+    private double zDeadband = 0.1;
     private double throttleLowerBound = 0.3;
     private double throttleUpperBound = 0.8;
 
@@ -40,7 +40,7 @@ public class NAR_Joystick {
             
         for (int i = 0; i < 8; i++) {
             int povButtonId = i;
-            povButtons[povButtonId] = new Trigger(()->stick.getPOV(povButtonId) == povButtonId*45);
+            povButtons[povButtonId] = new Trigger(()->stick.getPOV(povButtonId) == povButtonId * 45);
         }
             
     }
@@ -57,7 +57,7 @@ public class NAR_Joystick {
 
     /**  @return Joystick Z on [-1, 1], -1 is twist left, 1 is twist right - default deadband is 0.05 */
     public double getZ() {
-        return Math.abs(stick.getZ()) > zDeadband ? stick.getZ() : 0;
+        return Math.abs(stick.getZ()) > zDeadband ? -stick.getZ() : 0;
     }
 
     /** Alias of getZ */
