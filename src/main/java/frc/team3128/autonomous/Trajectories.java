@@ -2,8 +2,15 @@ package frc.team3128.autonomous;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,22 +22,25 @@ import edu.wpi.first.wpilibj.Filesystem;
  */
 public class Trajectories {
 
-    private static HashMap<String, Trajectory> trajectories = new HashMap<String, Trajectory>();
+    private static HashMap<String, ArrayList<PathPlannerTrajectory>> trajectories = new HashMap<String, ArrayList<PathPlannerTrajectory>>();
 
-    static{
+    public static void initTrajectories() {
         final String[] trajectoryNames = {};
         for (String trajectoryName : trajectoryNames) {
-            Path path = Filesystem.getDeployDirectory().toPath().resolve("paths").resolve(trajectoryName + ".wpilib.json");
-            try {
-                trajectories.put(trajectoryName, TrajectoryUtil.fromPathweaverJson(path));
-            } catch (IOException ex) {
-                DriverStation.reportError("IOException loading trajectory " + trajectoryName, true);
-            }
+            // Path path = Filesystem.getDeployDirectory().toPath().resolve("paths").resolve(trajectoryName + ".wpilib.json");
+            trajectories.put(trajectoryName, PathPlanner.loadPathGroup(trajectoryName, 2, 2, false));
         }
     }
 
-    public static Trajectory get(String name) {
+    public static ArrayList<PathPlannerTrajectory> get(String name) {
         return trajectories.get(name);
+    }
+
+    public static PathPlannerTrajectory line(Pose2d pos1, Pose2d pos2) {
+        return PathPlanner.generatePath(
+            new PathConstraints(4, 4), 
+            pos1, 
+            pos2);
     }
     
 }

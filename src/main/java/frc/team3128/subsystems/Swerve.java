@@ -65,7 +65,10 @@ public class Swerve extends SubsystemBase {
                 translation.getX(), translation.getY(), rotation, getGyroRotation2d())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxSpeed);
+        setModuleStates(moduleStates);
+    }
 
+    public void setModuleStates(SwerveModuleState[] moduleStates) {
         for (SwerveModule module : modules) {
             module.setDesiredState(moduleStates[module.moduleNumber]);
         }

@@ -1,9 +1,16 @@
 package frc.team3128.autonomous;
 
+import java.util.HashMap;
+
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team3128.Constants.SwerveConstants;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.subsystems.Swerve;
 
 /**
  * Class to store information about autonomous routines.
@@ -12,9 +19,24 @@ import frc.team3128.common.utility.Log;
 
 public class AutoPrograms {
 
-    public AutoPrograms() {
+    private static SwerveAutoBuilder builder;
 
+    public static Swerve swerve;
+
+    public AutoPrograms() {
+        Trajectories.initTrajectories();
+        swerve = Swerve.getInstance();
         initAutoSelector();
+        builder = new SwerveAutoBuilder(
+            swerve::getPose,
+            swerve::resetOdometry,
+            SwerveConstants.swerveKinematics,
+            new PIDConstants(0,0,0),
+            new PIDConstants(0,0,0),
+            swerve::setModuleStates,
+            new HashMap<String,Command>(),
+            swerve
+        );
     }
 
     private void initAutoSelector() {
