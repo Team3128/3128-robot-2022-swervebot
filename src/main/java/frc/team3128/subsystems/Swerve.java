@@ -66,8 +66,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) { // TODO: Call this!!!!
-        odometry.resetPosition(pose, getGyroRotation2d());
         zeroGyro(pose.getRotation().getDegrees());
+        odometry.resetPosition(pose, getGyroRotation2d());
     }
 
     public SwerveModuleState[] getStates() {
@@ -107,10 +107,11 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("Robot X", position.getX());
         SmartDashboard.putNumber("Robot Y", position.getY());
         SmartDashboard.putNumber("Robot Gyro", getGyroRotation2d().getDegrees());
+        SmartDashboard.putString("POSE2D",getPose().toString());
     }
 
     public double getHeading() {
-        return -gyro.getAngle() + 90;
+        return gyro.getYaw() + 90;
     }
 
     public double getPitch() {

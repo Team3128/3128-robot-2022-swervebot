@@ -2,7 +2,9 @@ package frc.team3128.autonomous;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team3128.commands.CmdInPlaceTurn;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Swerve;
@@ -30,7 +32,7 @@ public class AutoPrograms {
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
         // String selectedAutoName = "3 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
-        selectedAutoName = "3Ball"; //"Marriage";
+        selectedAutoName = ""; //"Marriage";
 
         if (selectedAutoName == null) {
             return null;
@@ -47,7 +49,14 @@ public class AutoPrograms {
             case("3Ball"):
                 initialPose = Trajectories.get("3Ball").getInitialPose();
                 autoCommand = Trajectories.path("3Ball");
-                break;    
+                break; 
+            case("Forward"):
+                initialPose = Trajectories.get("Forward").getInitialPose();
+                autoCommand = Trajectories.path("Forward");
+                break;
+            case("180Turn"):
+                initialPose = Trajectories.get("Forward").getInitialPose();
+                autoCommand = new CmdInPlaceTurn(180);
             default: 
                 Log.info("Auto Selector", "Something went wrong in getting the auto name - misspelling?");
                 break;

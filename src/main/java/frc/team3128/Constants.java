@@ -80,7 +80,7 @@ public class Constants {
         /* Swerve Profiling Values */
         public static final double maxSpeed = 3; //4.5// 4.96824; // citrus: 4.5 //meters per second - 16.3 ft/sec
         public static final double maxAcceleration = 2;
-        public static final double maxAngularVelocity = 3; //11.5; // citrus: 10
+        public static final double maxAngularVelocity = 1;//3; //11.5; // citrus: 10
 
         /* Motor Inverts */
         public static final boolean driveMotorInvert = false;

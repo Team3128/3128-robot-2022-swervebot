@@ -15,7 +15,7 @@ public class CmdInPlaceTurn extends PIDCommand {
     public CmdInPlaceTurn(double degrees) {
         super(
             new PIDController(turnKP,turnKF,turnKD),
-            () -> Swerve.getInstance().getHeading(),
+            () -> MathUtil.inputModulus(Swerve.getInstance().getHeading(),-180,180),
             0,
             output -> Swerve.getInstance().drive(new Translation2d(), output + Math.copySign(turnKF,output), false),
             Swerve.getInstance()
