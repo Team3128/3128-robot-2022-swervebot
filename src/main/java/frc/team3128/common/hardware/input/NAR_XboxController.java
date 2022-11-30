@@ -45,7 +45,7 @@ public class NAR_XboxController extends XboxController {
 
     @Override
     public double getRightX() {
-        return Math.abs(super.getRightX()) > 0.1 ? -super.getRightX():0;
+        return Math.abs(super.getRightX()) > 0.1 ? super.getRightX():0;
     }
 
     @Override
