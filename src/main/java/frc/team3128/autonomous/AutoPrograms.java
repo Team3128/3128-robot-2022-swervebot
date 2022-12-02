@@ -21,24 +21,13 @@ import frc.team3128.subsystems.Swerve;
 
 public class AutoPrograms {
 
-    private static SwerveAutoBuilder builder;
-
     public static Swerve swerve;
 
     public AutoPrograms() {
-        Trajectories.initTrajectories();
         swerve = Swerve.getInstance();
+
+        Trajectories.initTrajectories();
         initAutoSelector();
-        builder = new SwerveAutoBuilder(
-            swerve::getPose,
-            swerve::resetOdometry,
-            SwerveConstants.swerveKinematics,
-            new PIDConstants(0,0,0),
-            new PIDConstants(0,0,0),
-            swerve::setModuleStates,
-            new HashMap<String,Command>(),
-            swerve
-        );
     }
 
     private void initAutoSelector() {
@@ -55,32 +44,7 @@ public class AutoPrograms {
             return null;
         }
 
-        Pose2d initialPose = null;
-        Command autoCommand = null;
-
-        // switch (selectedAutoName) {
-        //     case("Marriage"):
-        //         initialPose = Trajectories.get("Marriage").getInitialPose();
-        //         autoCommand = Trajectories.path("Marriage");
-        //         break;
-        //     case("3Ball"):
-        //         initialPose = Trajectories.get("3Ball").getInitialPose();
-        //         autoCommand = Trajectories.path("3Ball");
-        //         break; 
-        //     case("Forward"):
-        //         initialPose = Trajectories.get("Forward").getInitialPose();
-        //         autoCommand = Trajectories.path("Forward");
-        //         break;
-        //     case("180Turn"):
-        //         initialPose = Trajectories.get("Forward").getInitialPose();
-        //         autoCommand = new CmdInPlaceTurn(180);
-        //     default: 
-        //         Log.info("Auto Selector", "Something went wrong in getting the auto name - misspelling?");
-        //         break;
-        // }
-
-        swerve.resetOdometry(initialPose);
-        return autoCommand;
+        return Trajectories.get(selectedAutoName);
     }
     
     // /** 

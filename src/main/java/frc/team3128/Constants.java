@@ -60,6 +60,16 @@ public class Constants {
 
         public static final double TURN_TOLERANCE = 3;
 
+        /* Translation PID Values */
+        public static final double translationKP = 1;
+        public static final double translationKI = 0;
+        public static final double translationKD = 0;
+
+        /* Rotation PID Values */
+        public static final double rotationKP = 1;
+        public static final double rotationKI = 0;
+        public static final double rotationKD = 0;
+
         /* Turning PID Values */
         public static final double turnKP = 0.1;
         public static final double turnKI = 0;
