@@ -68,7 +68,7 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] moduleStates = swerveKinematics.toSwerveModuleStates(
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(), translation.getY(), rotation, getGyroRotation2d())
-                : new ChassisSpeeds(translation.getY(), -translation.getX(), rotation));
+                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxSpeed);
         setModuleStates(moduleStates);
     }
@@ -135,8 +135,8 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("POSE2D",getPose().toString());
     }
 
-    private double getYaw() {
-        return gyro.getYaw() + 90;
+    public double getYaw() {
+        return gyro.getYaw();
     }
 
     public double getPitch() {
