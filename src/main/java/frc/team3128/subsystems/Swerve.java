@@ -64,12 +64,24 @@ public class Swerve extends SubsystemBase {
         };
     }
 
+    /**
+     * Converts inputed velocities into seperate module states that are fed to the module. Module state consists
+     * the velocity and angle of a specific module.
+     * 
+     * @param translation Uses the x and y of a translated point inputted and interprets it as the x and y velocities
+     * of the module
+     * @param rotation Uses the angle inputted and unterprets it as the rotational velocity of the module
+     * @param fieldRelative True when the movement of the robot is determine by the orientation of the user when the
+     * robot is initialized and directions are preserved regardless of robot angle. Flase when the movement of the robot is determine by the 
+     * orientation of the robot and directions are affected by the robot angle.
+     */
+    
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
         SwerveModuleState[] moduleStates = swerveKinematics.toSwerveModuleStates(
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(), translation.getY(), rotation, getGyroRotation2d())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxSpeed);
+        //SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxSpeed);
         setModuleStates(moduleStates);
     }
 
@@ -135,6 +147,9 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("POSE2D",getPose().toString());
     }
 
+    /**
+     * @return rotation of the robot relative to gyro
+     */
     public double getYaw() {
         return gyro.getYaw();
     }
@@ -159,6 +174,9 @@ public class Swerve extends SubsystemBase {
         return estimatedPose.getRotation();
     }
 
+    /**
+     * @return rotaiton of the robot relative to odometry
+     */
     public double getHeading() {
         return getRotation2d().getDegrees();
     }

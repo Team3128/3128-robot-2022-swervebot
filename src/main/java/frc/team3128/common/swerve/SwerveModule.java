@@ -95,10 +95,16 @@ public class SwerveModule {
         driveMotor.setSelectedSensorPosition(0);
     }
 
+    /**
+     * @return CanCoder non-volotile absolute position
+     */
     public Rotation2d getCanCoder(){
         return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition() - angleOffset);
     }
 
+    /**
+     * @return velocity and angle of the module
+     */
     public SwerveModuleState getState(){
         double velocity = falconToMPS(driveMotor.getSelectedSensorVelocity(), wheelCircumference, driveGearRatio);
         Rotation2d angle = Rotation2d.fromDegrees(falconToDegrees(angleMotor.getSelectedSensorPosition(), angleGearRatio));
