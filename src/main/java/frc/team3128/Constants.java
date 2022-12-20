@@ -58,10 +58,12 @@ public class Constants {
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
-        public static final double TURN_TOLERANCE = 3;
+        public static final double TURN_TOLERANCE = 5;
+
+        public static final double DRIVE_TOLERANCE = 0.2;
 
         /* Translation PID Values */
-        public static final double translationKP = 1;
+        public static final double translationKP = 0.1;
         public static final double translationKI = 0;
         public static final double translationKD = 0;
 
@@ -198,17 +200,21 @@ public class Constants {
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> visionMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
 
-        public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(0.05,0.05,Units.degreesToRadians(0));
+        public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(1,1,Units.degreesToRadians(1));
  
-        public static final Matrix<N1,N1> SVR_LOCAL_MEASUREMENT_STD = VecBuilder.fill(Units.degreesToRadians(0));
+        public static final Matrix<N1,N1> SVR_LOCAL_MEASUREMENT_STD = VecBuilder.fill(Units.degreesToRadians(1));
  
-        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(0.01,0.5,Units.degreesToRadians(0));
+        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(0.1));
 
         static {
             visionMap.put(new InterpolatingDouble(3.34),new InterpolatingDouble(4.0));
         }
 
         public static final Pose2d[] APRIL_TAG_POS = new Pose2d[] {
+            new Pose2d(0,0, Rotation2d.fromDegrees(0)),
+            new Pose2d(0,0, Rotation2d.fromDegrees(0)),
+            new Pose2d(0,0, Rotation2d.fromDegrees(0)),
+            new Pose2d(0,0, Rotation2d.fromDegrees(0)),
             new Pose2d(0,0, Rotation2d.fromDegrees(0))
         };
     }

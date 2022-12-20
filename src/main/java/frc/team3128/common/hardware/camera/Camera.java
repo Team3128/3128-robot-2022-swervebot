@@ -3,9 +3,10 @@ package frc.team3128.common.hardware.camera;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 
 public enum Camera {
-    SHOOTER("gloworm",true,0,0, 0, new Transform2d(new Translation2d(10,0), Rotation2d.fromDegrees(0))), //Bad Numbers
+    SHOOTER("Frog",true,0,0, 0, new Transform2d(new Translation2d(Units.inchesToMeters(-12),0), Rotation2d.fromDegrees(180))), //Bad Numbers
     PI_CAMERA("teja",false,10000, 40, 0,new Transform2d(new Translation2d(10,0), Rotation2d.fromDegrees(0))); //Bad Numbers
 
     public String hostname;

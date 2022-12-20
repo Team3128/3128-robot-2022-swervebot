@@ -46,6 +46,7 @@ public class Swerve extends SubsystemBase {
         gyro.configFactoryDefault();
         zeroGyro();
         fieldRelative = true;
+        estimatedPose = new Pose2d();
 
         odometry = new SwerveDrivePoseEstimator(
             getGyroRotation2d(),
