@@ -43,6 +43,7 @@ public class AutoPrograms {
         if (selectedAutoName == null) {
             return null;
         }
+        //return Trajectories.lineCmd(Swerve.getInstance().getPose(), new Pose2d(6,2, Swerve.getInstance().getRotation2d()));
 
         return Trajectories.get(selectedAutoName);
     }

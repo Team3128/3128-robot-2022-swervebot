@@ -3,11 +3,14 @@ package frc.team3128;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.FALCON_ENCODER_RESOLUTION;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.SPARKMAX_ENCODER_RESOLUTION;
 
+import java.util.HashMap;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.team3128.common.hardware.camera.Camera;
 import frc.team3128.common.swerve.SwerveModuleConstants;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
@@ -15,6 +18,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -58,19 +62,26 @@ public class Constants {
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
-        public static final double TURN_TOLERANCE = 5;
-
         public static final double DRIVE_TOLERANCE = 0.2;
 
-        /* Translation PID Values */
-        public static final double translationKP = 0.1;
-        public static final double translationKI = 0;
-        public static final double translationKD = 0;
-
-        /* Rotation PID Values */
+        /* Auto PID Values */
         public static final double rotationKP = 1;
         public static final double rotationKI = 0;
         public static final double rotationKD = 0;
+
+        public static final double translationKP = 2;
+        public static final double translationKI = 0;
+        public static final double translationKD = 0;
+
+        /* Translation PID Values */
+        public static final double distanceKP = 1;
+        public static final double distanceKI = 0;
+        public static final double distanceKD = 0;
+
+        /* Rotation PID Values */
+        public static final double alignKP = 0.05;
+        public static final double alignKI = 0;
+        public static final double alignKD = 0;
 
         /* Turning PID Values */
         public static final double turnKP = 0.1;
@@ -103,7 +114,7 @@ public class Constants {
         /* Swerve Profiling Values */
         public static final double maxSpeed = 3; //4.5// 4.96824; // citrus: 4.5 //meters per second - 16.3 ft/sec
         public static final double maxAcceleration = 2;
-        public static final double maxAngularVelocity = 1;//3; //11.5; // citrus: 10
+        public static final double maxAngularVelocity = 2;//3; //11.5; // citrus: 10
 
         /* Motor Inverts */
         public static final boolean driveMotorInvert = false;
@@ -186,6 +197,8 @@ public class Constants {
 
     public static class VisionConstants {
 
+        public static final Camera SHOOTER = new Camera("Frog",0,0,0, new Transform2d(new Translation2d(Units.inchesToMeters(-12),0), Rotation2d.fromDegrees(0)));
+
         public static final double SCREEN_WIDTH = 320;
         public static final double SCREEN_HEIGHT = 240;
     
@@ -198,29 +211,23 @@ public class Constants {
 
         public static final double TARGET_AREA = 6.25 * 6.25; //inches
 
-        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> visionMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+        public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(10,10,Units.degreesToRadians(0.1));
+ 
+        public static final Matrix<N1,N1> SVR_LOCAL_MEASUREMENT_STD = VecBuilder.fill(Units.degreesToRadians(0.1));
+ 
+        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(1,1,Units.degreesToRadians(1));
 
-        public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(1,1,Units.degreesToRadians(1));
- 
-        public static final Matrix<N1,N1> SVR_LOCAL_MEASUREMENT_STD = VecBuilder.fill(Units.degreesToRadians(1));
- 
-        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(0.1));
+        public static final HashMap<Integer,Pose2d> APRIL_TAG_POS = new HashMap<Integer,Pose2d>();
 
         static {
-            visionMap.put(new InterpolatingDouble(3.34),new InterpolatingDouble(4.0));
-        }
-
-        public static final Pose2d[] APRIL_TAG_POS = new Pose2d[] {
-            new Pose2d(0,0, Rotation2d.fromDegrees(0)),
-            new Pose2d(0,0, Rotation2d.fromDegrees(0)),
-            new Pose2d(0,0, Rotation2d.fromDegrees(0)),
-            new Pose2d(0,0, Rotation2d.fromDegrees(0)),
-            new Pose2d(0,0, Rotation2d.fromDegrees(0))
-        };
+            APRIL_TAG_POS.put(1,FieldConstants.HUB_POSITION);
+            APRIL_TAG_POS.put(5,FieldConstants.HUB_POSITION.transformBy(new Transform2d(new Translation2d(0,-1), new Rotation2d())));
+            APRIL_TAG_POS.put(3,FieldConstants.HUB_POSITION.transformBy(new Transform2d(new Translation2d(0,-2), new Rotation2d())));
+        } 
     }
     
     public static class FieldConstants{
-        public static final Pose2d HUB_POSITION = new Pose2d(Units.inchesToMeters(324), Units.inchesToMeters(162),new Rotation2d(0));
+        public static final Pose2d HUB_POSITION = new Pose2d(Units.inchesToMeters(324), Units.inchesToMeters(162),Rotation2d.fromDegrees(-90));
         public static final double FIELD_X_LENGTH = Units.inchesToMeters(648); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(324); // meters
         public static final double HUB_RADIUS = Units.inchesToMeters(26.69); // meters

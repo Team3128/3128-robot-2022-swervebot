@@ -7,8 +7,10 @@ package frc.team3128;
 import java.util.ArrayList;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -20,12 +22,15 @@ import frc.team3128.autonomous.AutoPrograms;
  */
 public class Robot extends TimedRobot {
 
+    public static boolean isRED = true;
+
     public static RobotContainer m_robotContainer = new RobotContainer();
     private Command m_autonomousCommand;
     public static AutoPrograms autoPrograms = new AutoPrograms();
 
     @Override
     public void robotInit(){
+        isRED = DriverStation.getAlliance() == Alliance.Red;
         LiveWindow.disableAllTelemetry();
     }
 
