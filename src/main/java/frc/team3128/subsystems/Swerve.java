@@ -9,19 +9,28 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team3128.common.swerve.SecondOrderChassisSpeeds;
+import frc.team3128.common.swerve.SecondOrderSwerveDriveKinematics;
+import frc.team3128.common.swerve.SecondOrderSwerveDriveOdometry;
+import frc.team3128.common.swerve.SecondOrderSwerveModuleState;
 import frc.team3128.common.swerve.SwerveModule;
 import static frc.team3128.Constants.SwerveConstants.*;
 
 import javax.lang.model.element.ModuleElement;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry odometry;
+    public SecondOrderSwerveDriveOdometry odometry;
     public SwerveModule[] modules;
     public static WPI_Pigeon2 gyro;
     private static Swerve instance;
     public boolean fieldRelative;
+
+    private Translation2d previousTranslation;
+    private long previousTime;
+    private double previousRotation;
 
     public Swerve() {
         gyro = new WPI_Pigeon2(pigeonID);
@@ -29,7 +38,7 @@ public class Swerve extends SubsystemBase {
         zeroGyro();
         fieldRelative = true;
 
-        odometry = new SwerveDriveOdometry(swerveKinematics, getGyroRotation2d());
+        odometry = new SecondOrderSwerveDriveOdometry(swerveKinematics, getGyroRotation2d());
 
         modules = new SwerveModule[] {
             new SwerveModule(0, Mod0.constants),
@@ -40,16 +49,36 @@ public class Swerve extends SubsystemBase {
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
-        SwerveModuleState[] moduleStates = swerveKinematics.toSwerveModuleStates(
-            fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getGyroRotation2d())
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+
+        if(previousTranslation == null) {
+            previousTranslation = translation;
+            previousTime = WPIUtilJNI.now();
+            previousRotation = rotation;
+        }
+
+        double dt = (WPIUtilJNI.now() - previousTime) / 1000000000.0;
+
+        //Get SecondOrderChassisSpeeds
+        SecondOrderChassisSpeeds secondOrderChassisSpeeds = new SecondOrderChassisSpeeds(
+            translation.getX(),
+            translation.getY(),
+            rotation,
+            (translation.getX() - previousTranslation.getX()) / dt,
+            (translation.getY() - previousTranslation.getY()) / dt,
+            rotation-previousRotation/dt //TODO: I'm not sure if rotation is an angular velocity
+        );
+        
+        SecondOrderSwerveModuleState[] moduleStates = swerveKinematics.toSwerveModuleStates(
+            fieldRelative ? SecondOrderChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, secondOrderChassisSpeeds.axMetersPerSecondSq,
+                secondOrderChassisSpeeds.ayMetersPerSecondSq, secondOrderChassisSpeeds.alphaRadiansPerSecondSq, getGyroRotation2d())
+                : secondOrderChassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxSpeed);
 
         setStates(moduleStates);
     }
 
-    public void setStates(SwerveModuleState[] states) {
+    public void setStates(SecondOrderSwerveModuleState[] states) {
         for (SwerveModule module : modules) {
             module.setDesiredState(states[module.moduleNumber]);
         }
@@ -86,8 +115,8 @@ public class Swerve extends SubsystemBase {
         fieldRelative = true;
     }
 
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeed);
+    public void setModuleStates(SecondOrderSwerveModuleState[] desiredStates) {
+        SecondOrderSwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeed);
         
         for (SwerveModule module : modules){
             module.setDesiredState(desiredStates[module.moduleNumber]);

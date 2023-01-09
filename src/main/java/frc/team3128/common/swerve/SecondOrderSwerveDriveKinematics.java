@@ -199,5 +199,74 @@ public class SecondOrderSwerveDriveKinematics {
         return toSwerveModuleStates(secondOrderChassisSpeeds, centerOfRotationMeters);
     }
 
+    public SecondOrderChassisSpeeds toChassisSpeeds(SecondOrderSwerveModuleState... wheelStates) {
+
+        if(wheelStates.length != m_numModules) {
+            throw new IllegalArgumentException("The number of wheel states must be equal to the number of modules");
+        }
+
+        //First Order
+
+        var moduleStatesMatrix = new SimpleMatrix(m_numModules * 2, 1);
+        for (int i = 0; i < m_numModules; i++) {
+            var module = wheelStates[i];
+            moduleStatesMatrix.set(i * 2, 0, module.speedMetersPerSecond * module.angle.getCos());
+            moduleStatesMatrix.set(i * 2 + 1, module.speedMetersPerSecond * module.angle.getSin());
+          }
+      
+          var chassisSpeedsVector = m_firstOrderForward.mult(moduleStatesMatrix);
+
+          //Second Order
+
+        var accelerationAxisVector = new SimpleMatrix(2*m_numModules, 1);
+
+        for(int i = 0; i < m_numModules; i++) {
+            var secondOrderVector = new SimpleMatrix(2, 1);
+            secondOrderVector.set(0, 0, wheelStates[i].accelerationMetersPerSecondSquared);
+            secondOrderVector.set(1, 0, wheelStates[i].angularVelocity.getRadians() * wheelStates[i].speedMetersPerSecond);
+
+            double moduleAngle = wheelStates[i].angle.getRadians();
+            var angleMatrix = new SimpleMatrix(2, 2);
+
+            angleMatrix.setRow(0, 0, Math.cos(moduleAngle), Math.sin(moduleAngle));
+            angleMatrix.setRow(1, 0, -Math.sin(moduleAngle), Math.cos(moduleAngle));
+
+            var angleMatrixInv = angleMatrix.invert();
+
+            var secondOrderVectorFinal = angleMatrixInv.mult(secondOrderVector);
+
+            accelerationAxisVector.set(i*2, 0, secondOrderVectorFinal.get(0, 0));
+            accelerationAxisVector.set(i*2+1, 0, secondOrderVectorFinal.get(1, 0));
+        }
+
+        var chassisAccelerationVector = m_secondOrderForward.mult(accelerationAxisVector);
+
+        double v_x = chassisSpeedsVector.get(0, 0);
+        double v_y = chassisSpeedsVector.get(1, 0);
+        double omega = chassisSpeedsVector.get(2, 0);
+
+        double a_x = chassisAccelerationVector.get(0, 0);
+        double a_y = chassisAccelerationVector.get(1, 0);
+        double otherOmega = Math.sqrt(chassisAccelerationVector.get(2,0));
+        double alpha = chassisAccelerationVector.get(3, 0);
+
+
+        SecondOrderChassisSpeeds secondOrderChassisSpeeds = new SecondOrderChassisSpeeds(v_x, v_y, omega, a_x, a_y, alpha);
+
+
+        return secondOrderChassisSpeeds;
+    }
+
+    public static void desaturateWheelSpeeds(
+        SwerveModuleState[] moduleStates, double attainableMaxSpeedMetersPerSecond) {
+      double realMaxSpeed = Collections.max(Arrays.asList(moduleStates)).speedMetersPerSecond;
+      if (realMaxSpeed > attainableMaxSpeedMetersPerSecond) {
+        for (SwerveModuleState moduleState : moduleStates) {
+          moduleState.speedMetersPerSecond =
+              moduleState.speedMetersPerSecond / realMaxSpeed * attainableMaxSpeedMetersPerSecond;
+        }
+      }
+    }
+
 
 }

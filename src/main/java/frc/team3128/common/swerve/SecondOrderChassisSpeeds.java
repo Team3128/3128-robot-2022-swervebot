@@ -18,7 +18,7 @@ public class SecondOrderChassisSpeeds extends ChassisSpeeds {
         this.alphaRadiansPerSecondSq = alphaRadiansPerSecondSquared;
     }
 
-    public static ChassisSpeeds fromFieldRelativeSpeeds(
+    public static SecondOrderChassisSpeeds fromFieldRelativeSpeeds(
       double vxMetersPerSecond,
       double vyMetersPerSecond,
       double omegaRadiansPerSecond,
